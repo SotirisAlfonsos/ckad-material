@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+  labels:
+    app: helloWorld
+    rel: stable
+spec:
+  replicas: 2
+  minReadySeconds: 30
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world-container
+          image: k8.test/hello-world:v5
+          imagePullPolicy: Never
+          readinessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+            periodSeconds: 5
+            failureThreshold: 1
